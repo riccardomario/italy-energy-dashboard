@@ -148,11 +148,13 @@ def backfill_flows(start, end):
 
 
 def write_status(start, end):
+    from pipeline.update import compute_data_end_utc
+    data_end = compute_data_end_utc() or str(pd.Timestamp(end).date())
     status = {
         "last_run_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "last_run_status": "success",
         "data_start": str(pd.Timestamp(start).date()),
-        "data_end": str(pd.Timestamp(end).date()),
+        "data_end": data_end,
         "files": {
             "load": str(LOAD_PARQUET.relative_to(ROOT).as_posix()),
             "generation": str(GEN_PARQUET.relative_to(ROOT).as_posix()),

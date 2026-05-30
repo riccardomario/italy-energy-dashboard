@@ -102,19 +102,35 @@ def update_flows(start, end) -> int:
     return n_rev
 
 
+def compute_data_end_utc() -> str:
+    """Latest UTC date for which we have a complete load day (>=23 hourly
+    rows in IT_NORD). Matches the dashboard's completeness rule, so the Home
+    badge agrees with the latest day visible on the charts.
+    """
+    if not LOAD_PARQUET.exists():
+        return ""
+    df = pd.read_parquet(LOAD_PARQUET, columns=["timestamp_utc", "zone"])
+    df = df[df["zone"] == "IT_NORD"]
+    df["timestamp_utc"] = pd.to_datetime(df["timestamp_utc"], utc=True)
+    counts = df.groupby(df["timestamp_utc"].dt.date).size()
+    complete = counts[counts >= 23]
+    return str(complete.index.max()) if len(complete) else ""
+
+
 def write_status(end, revisions: dict):
     status = {}
     if STATUS_JSON.exists():
         status = json.loads(STATUS_JSON.read_text())
+    data_end = compute_data_end_utc() or str(pd.Timestamp(end).date())
     status.update({
         "last_run_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "last_run_status": "success",
-        "data_end": str(pd.Timestamp(end).date()),
+        "data_end": data_end,
         "revisions_last_run": revisions,
     })
     status.setdefault("data_start", "2016-01-01")
     STATUS_JSON.write_text(json.dumps(status, indent=2))
-    print(f"\n  wrote {STATUS_JSON}")
+    print(f"\n  wrote {STATUS_JSON} (data_end={data_end})")
 
 
 def main():
