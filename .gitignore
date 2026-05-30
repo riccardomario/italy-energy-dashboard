@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+.streamlit/secrets.toml
+
+entsoe_out/
+*.tmp
+*.tmp.*
+.ipynb_checkpoints/
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local-only notes / old files / Claude metadata
+Chat.md
+.00 OLD/
+.claude/
+
+# Backfill staging directory (cleaned after each run)
+data/_partials/
+
+# Excel exports produced by tools/export_to_excel.py
+italy_energy_export_*.xlsx

@@ -1,0 +1,45 @@
+name: Daily data refresh
+
+on:
+  schedule:
+    # 06:00 UTC every day. Retry at 08:00 UTC if the 06:00 run failed.
+    - cron: "0 6 * * *"
+    - cron: "0 8 * * *"
+  workflow_dispatch: {}   # allows manual "Run workflow" button
+
+permissions:
+  contents: write   # needed to commit updated parquet back to the repo
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run incremental update (14-day lookback)
+        env:
+          ENTSOE_API_TOKEN: ${{ secrets.ENTSOE_API_TOKEN }}
+        run: |
+          mkdir -p .streamlit
+          printf 'ENTSOE_API_TOKEN = "%s"\n' "$ENTSOE_API_TOKEN" > .streamlit/secrets.toml
+          python pipeline/update.py --lookback 14
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/*.parquet data/last_update.json
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "Daily data refresh $(date -u +%Y-%m-%d)"
+            git push
+          fi

@@ -1,0 +1,6 @@
+entsoe-py>=0.6.7
+pandas>=2.2
+pyarrow>=15.0
+streamlit>=1.36
+plotly>=5.22
+openpyxl>=3.1
