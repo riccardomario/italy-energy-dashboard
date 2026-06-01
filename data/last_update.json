@@ -1,8 +1,8 @@
 {
-  "last_run_utc": "2026-05-31T10:14:11+00:00",
+  "last_run_utc": "2026-06-01T11:11:16+00:00",
   "last_run_status": "success",
   "data_start": "2016-01-01",
-  "data_end": "2026-05-29",
+  "data_end": "2026-05-30",
   "files": {
     "load": "data/load.parquet",
     "generation": "data/generation.parquet",
