@@ -1,5 +1,5 @@
 {
-  "last_run_utc": "2026-07-23T08:12:21+00:00",
+  "last_run_utc": "2026-07-23T10:19:57+00:00",
   "last_run_status": "success",
   "data_start": "2016-01-01",
   "data_end": "2026-07-21",
@@ -11,6 +11,6 @@
   "revisions_last_run": {
     "load": 0,
     "generation": 0,
-    "flows": 33
+    "flows": 0
   }
 }
