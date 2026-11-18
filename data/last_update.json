@@ -1,5 +1,5 @@
 {
-  "last_run_utc": "2026-11-18T14:54:04+00:00",
+  "last_run_utc": "2026-11-18T17:00:03+00:00",
   "last_run_status": "success",
   "data_start": "2016-01-01",
   "data_end": "2026-11-17",
@@ -11,6 +11,6 @@
   "revisions_last_run": {
     "load": 0,
     "generation": 0,
-    "flows": 53
+    "flows": 0
   }
 }
